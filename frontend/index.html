@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Help Desk - Logística</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loginContainer" class="login-container">
+    <div class="login-wrapper"> 
+      <h1 class="login-logo">CHAMADOS <span>LOGÍSTICA</span></h1>
+
+      <form id="loginForm" class="login-box">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+        <p id="loginMsg" style="color: #ff4d4d; margin-top: 10px;"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="sistema" style="display:none; padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>📋 Painel de Chamados</h1>
+    <button onclick="logout()" class="logout-btn">Sair</button>
+  </div>
+  
+  <br>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <a href="abrir-chamado.html" class="btn-novo">➕ Abrir Novo Chamado</a>
+    <button id="btnGerenciarUsuarios" onclick="abrirModalUsuario()" style="display:none;" class="btn-novo">👤 Novo Usuário</button>
+    
+    <button onclick="mudarAba('Aberto')" id="tabAbertos" style="padding: 10px; cursor: pointer; background: #2f80ed; color: white; border: none; border-radius: 5px;">Abertos</button>
+    <button onclick="mudarAba('Finalizado')" id="tabFinalizados" style="padding: 10px; cursor: pointer; background: #444; color: white; border: none; border-radius: 5px;">Finalizados</button>
+  </div>
+  <br><br>
+
+  <ul id="lista"></ul>
+</div>
+
+  <div id="modalDetalhes" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h2 id="modalTitulo"></h2>
+      <hr>
+      
+      <p><strong>Aberto em:</strong> <span id="modalDataAbertura"></span></p>
+      
+      <div id="containerFinalizacao" style="display:none;">
+        <p><strong>Finalizado em:</strong> <span id="modalDataFinalizacao"></span></p>
+        <p><strong>Solução:</strong></p>
+        <p id="modalSolucaoExibicao" style="background: #1a3a1a; padding: 10px; border-radius: 5px; border-left: 4px solid #4cd137;"></p>
+      </div>
+      
+      <p><strong>Descrição do Problema:</strong></p>
+      <p id="modalDescricao" style="background: #262626; padding: 10px; border-radius: 5px;"></p>
+
+      <div id="areaSolucao" style="display:none; margin-top: 20px;">
+        <p><strong>Descreva a Solução:</strong></p>
+        <textarea id="inputSolucao" placeholder="O que foi feito para resolver?" rows="3" style="width:100%; margin-top:5px;"></textarea>
+        <button id="btnFinalizar" onclick="finalizarChamadoAtual()" style="background: #4cd137; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;">
+          Finalizar e Salvar Solução
+        </button>
+      </div>
+    </div>
+  </div>
+<div id="modalDetalhes" class="modal" style="display:none;">
+    </div>
+
+        <div id="modalUsuario" class="modal" style="display:none; z-index: 9999;">
+          <div class="modal-content">
+            <span class="close" onclick="fecharModalUsuario()">&times;</span>
+            <h2>👤 Cadastrar Novo Usuário</h2>
+            <hr>
+            <form id="formNovoUsuario">
+              <div style="margin-bottom: 10px;">
+                <label>Nome:</label><br>
+                <input type="text" id="regNome" style="width:100%" required>
+              </div>
+              <div style="margin-bottom: 10px;">
+                <label>Email:</label><br>
+                <input type="email" id="regEmail" style="width:100%" required>
+              </div>
+              <div style="margin-bottom: 10px;">
+                <label>Senha:</label><br>
+                <input type="password" id="regSenha" style="width:100%" required>
+              </div>
+              <div style="margin-bottom: 10px;">
+                <label>Tipo:</label><br>
+                <select id="regTipo" style="width:100%">
+                  <option value="user">Usuário Comum</option>
+                  <option value="admin">Técnico (Admin)</option>
+                </select>
+              </div>
+              <button type="submit" style="width:100%; background: #8e44ad; color: white; padding: 10px; border: none; cursor: pointer;">Criar Conta</button>
+            </form>
+          </div>
+        </div>
+
+        
+  <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #0f0f0f; /* Preto quase puro */
+  color: #ffffff;
+}
+
+/* Centralização do Login */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #1a2a6c, #000000); /* Degradê azul para preto */
+}
+
+.login-box {
+  background: #1a1a1a; /* Cinza muito escuro */
+  padding: 40px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2f80ed; /* Borda fina azul */
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 25px;
+  color: #2f80ed; /* Azul brilhante */
+  font-weight: 600;
+}
+
+/* Campos de entrada */
+.login-box input {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #262626;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: white;
+  transition: border-color 0.3s;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #2f80ed;
+}
+
+/* Botão de Entrar */
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s;
+}
+
+.login-box button:hover {
+  background: #1a66cc;
+}
+
+.login-box button:active {
+  transform: scale(0.98);
+}
+
+/* Estilo para a Lista de Chamados após o login */
+#sistema {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #2f80ed;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  background: #1a1a1a;
+  margin-bottom: 12px;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #2f80ed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+a {
+  color: #2f80ed;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+button.logout-btn {
+  background: #ff4d4d;
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+/* Container que agrupa o Título e a Box de Login */
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilo do Título Logística */
+.login-logo {
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(47, 128, 237, 0.7); /* Brilho azul */
+  text-align: center;
+}
+
+/* Opcional: destaque na palavra LOGÍSTICA se quiser usar um <span> nela */
+.login-logo span {
+  color: #2f80ed;
+}
+/* Fundo do Modal */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Caixa do Modal */
+.modal-content {
+  background-color: #1a1a1a;
+  padding: 30px;
+  border: 1px solid #2f80ed;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 500px;
+  color: white;
+  position: relative;
+}
+
+/* Botão Fechar */
+.close {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #2f80ed;
+}
+/* Estilo específico para o campo de texto grande */
+textarea {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #262626;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: white;
+  resize: none; /* Impede o usuário de bagunçar o layout */
+  transition: border-color 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #2f80ed;
+}
+
+/* Garante que o link de voltar não tenha sublinhado e mude de cor no hover */
+a:hover {
+  color: #ffffff !important;
+}
+
+/* Estilo específico para o Botão de Novo Usuário */
+#btnGerenciarUsuarios {
+    background-color: #8e44ad; /* Roxo elegante para Admin */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#btnGerenciarUsuarios:hover {
+    background-color: #732d91;
+}
+
+/* Estilização do Formulário dentro do Modal */
+.form-cadastro {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.form-cadastro label {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: -10px;
+}
+
+.form-cadastro input, 
+.form-cadastro select {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+}
+
+.form-cadastro input:focus, 
+.form-cadastro select:focus {
+    border-color: #8e44ad;
+}
+
+.btn-salvar-user {
+    background: #8e44ad;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-salvar-user:hover {
+    background: #732d91;
+    transform: translateY(-2px);
+}
+
+/* Ajuste de profundidade para o modal não sumir */
+#modalUsuario {
+    z-index: 10000; /* Garante que fique por cima de tudo */
+}
