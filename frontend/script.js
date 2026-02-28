@@ -1,4 +1,4 @@
-const API = "https://logistica-helpdesk.onrender.com/chamados";
+const API = "https://logistica-helpdesk.onrender.com";
 let chamadoAbertoId = null; 
 let abaAtual = 'Aberto'; 
 let todosOsChamados = []; 
@@ -12,7 +12,7 @@ if (loginForm) {
     const inputSenha = document.getElementById("senha");
 
     if (inputEmail && inputSenha) {
-      const res = await fetch("http://localhost:3000/auth/login", {
+      const res = await fetch("https://logistica-helpdesk.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: inputEmail.value, senha: inputSenha.value }),
@@ -59,7 +59,7 @@ if (formUser) {
             tipo: document.getElementById("regTipo").value
         };
 
-        const res = await fetch("http://localhost:3000/auth/admin/register", {
+        const res = await fetch("https://logistica-helpdesk.onrender.com", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
