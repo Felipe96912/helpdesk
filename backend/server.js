@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 
+const authRoutes = require("./routes/auth"); // Verifique se o caminho da pasta está correto
+const chamadosRoutes = require("./routes/chamados");
+
 const app = express();
 
 app.use(cors());
