@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 
 // Catch-all: qualquer outra rota (como /login) volta para o index
 // Isso é vital para que o sistema não dê "Cannot GET /rota" ao atualizar a página
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
