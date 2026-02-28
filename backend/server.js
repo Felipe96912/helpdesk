@@ -18,23 +18,21 @@ const path = require('path');
 
 /// 📂 CONFIGURAÇÃO DO FRONTEND
 // __dirname é a pasta 'backend'. O '../frontend' sai da backend e entra na frontend.
-const path = require('path');
 
 // Se o server.js está em /backend e o index.html em /frontend
+/// 📂 CONFIGURAÇÃO DO FRONTEND
+// __dirname é a pasta 'backend'. O '../frontend' sai da backend e entra na frontend.
 const caminhoFrontend = path.join(__dirname, '..', 'frontend');
 
+// Serve os arquivos estáticos (CSS, JS, Imagens)
 app.use(express.static(caminhoFrontend));
 
+// Rota principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
-// IMPORTANTE: Esta rota "catch-all" deve vir por último
-app.get('*', (req, res) => {
-  res.sendFile(path.join(caminhoFrontend, 'index.html'));
-});
-
-// Se o usuário digitar qualquer outra coisa, manda pro index também
+// Catch-all: qualquer outra rota volta para o index (importante para SPAs)
 app.use((req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
