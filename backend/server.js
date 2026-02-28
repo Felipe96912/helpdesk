@@ -11,6 +11,7 @@ app.use("/chamados", require("./routes/chamados"));
 app.use("/auth", require("./routes/auth"));
 
 const path = require('path');
+
 /// 📂 CONFIGURAÇÃO DO FRONTEND
 // __dirname é a pasta 'backend'. O '../frontend' sai da backend e entra na frontend.
 const caminhoFrontend = path.join(__dirname, '..', 'frontend');
