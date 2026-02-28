@@ -18,10 +18,11 @@ if (loginForm) {
         const res = await fetch(`${API}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },            
-          body: JSON.stringify({ email: inputEmail.value.trim(), senha: inputSenha.value })
-          }),
+          body: JSON.stringify({ 
+            email: inputEmail.value.trim(), 
+            senha: inputSenha.value 
+          }) // Fechar o stringify e o objeto de opções corretamente
         });
-
         const data = await res.json();
         if (res.ok) {
           localStorage.setItem("token", data.token);
