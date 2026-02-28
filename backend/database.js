@@ -1,22 +1,24 @@
 const { Pool } = require('pg');
 
-// O Render ou o seu terminal local vai ler a URL daqui
-// Remova a URL gigante daqui e deixe apenas o process.env.DATABASE_URL
+// O Render lerá a URL da variável de ambiente que você configurou no painel
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  console.error("ERRO: A variável DATABASE_URL não foi definida!");
+  console.error("ERRO CRÍTICO: A variável DATABASE_URL não foi encontrada no ambiente!");
 }
+
 const pool = new Pool({
   connectionString,
   ssl: {
-    rejectUnauthorized: false // Necessário para conexões seguras na nuvem
+    // Obrigatório para conectar ao Neon a partir do Render
+    rejectUnauthorized: false 
   }
 });
 
-// Função para criar as tabelas caso não existam (Executa uma vez)
+// Função para garantir que as tabelas existam no branch 'production'
 const initDb = async () => {
   try {
+    // Criando tabelas com nomes em minúsculo para evitar erros de busca
     await pool.query(`
       CREATE TABLE IF NOT EXISTS usuarios (
         id SERIAL PRIMARY KEY,
@@ -36,9 +38,9 @@ const initDb = async () => {
         solucao TEXT
       );
     `);
-    console.log("Tabelas verificadas/criadas no Postgres.");
+    console.log("✅ Conexão com o Postgres estabelecida e tabelas verificadas.");
   } catch (err) {
-    console.error("Erro ao inicializar banco:", err);
+    console.error("❌ Erro ao inicializar banco no Neon:", err.message);
   }
 };
 
