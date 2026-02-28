@@ -1,8 +1,12 @@
 const { Pool } = require('pg');
 
 // O Render ou o seu terminal local vai ler a URL daqui
-const connectionString = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_GleKznh8VvF0@ep-orange-base-aitic8dp-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+// Remova a URL gigante daqui e deixe apenas o process.env.DATABASE_URL
+const connectionString = process.env.DATABASE_URL;
 
+if (!connectionString) {
+  console.error("ERRO: A variável DATABASE_URL não foi definida!");
+}
 const pool = new Pool({
   connectionString,
   ssl: {
