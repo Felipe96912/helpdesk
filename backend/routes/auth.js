@@ -21,24 +21,31 @@ function auth(req, res, next) {
   });
 }
 
-// 🔑 Rota de Login (Convertida para Postgres)
+// 🔑 Rota de Login (COM LOGS DE DEBUG E BUSCA ROBUSTA)
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
-  console.log("Tentativa de login para:", email); // <--- ADICIONE ISSO
-  
+  console.log("Tentativa de login para:", email); // Ajuda a ver o que chega no Render
+
   try {
-    // No Postgres, usamos db.query e o resultado vem em .rows
-    // O TRIM remove espaços e o LOWER ignora Maiúsculas/Minúsculas
-const result = await db.query(
-  "SELECT * FROM usuarios WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))", 
-  [email]
-);
+    // LOWER e TRIM evitam erros de espaços ou letras maiúsculas/minúsculas
+    const result = await db.query(
+      "SELECT * FROM usuarios WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))", 
+      [email]
+    );
     const user = result.rows[0];
 
-    if (!user || !(await bcrypt.compare(senha, user.senha))) {
-      console.log("USUÁRIO NÃO ENCONTRADO NO BANCO"); // <--- ADICIONE ISSO
+    if (!user) {
+      console.log("USUÁRIO NÃO ENCONTRADO NO BANCO"); // Se aparecer isso, o banco está vazio ou email errado
       return res.status(401).json({ erro: "Credenciais inválidas" });
     }
+
+    const senhaValida = await bcrypt.compare(senha, user.senha);
+    if (!senhaValida) {
+      console.log("SENHA INCORRETA"); // Se aparecer isso, o hash no banco não bate com a senha digitada
+      return res.status(401).json({ erro: "Credenciais inválidas" });
+    }
+
+    console.log("LOGIN SUCESSO!");
 
     const token = jwt.sign({ id: user.id, tipo: user.tipo }, SECRET, { expiresIn: "1h" });
     
@@ -47,7 +54,7 @@ const result = await db.query(
       tipo: user.tipo 
     });
   } catch (err) {
-    console.error(err);
+    console.error("Erro no SQL:", err.message); // Ver logs do Render para erros de conexão
     res.status(500).json({ erro: "Erro no servidor" });
   }
 });
@@ -68,7 +75,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// 👮 Rota exclusiva para ADMIN criar usuários (Convertida para Postgres)
+// 👮 Rota exclusiva para ADMIN criar usuários
 router.post("/admin/register", auth, async (req, res) => {
   if (req.userTipo !== 'admin') {
     return res.status(403).json({ erro: "Acesso negado. Apenas administradores podem criar usuários." });
