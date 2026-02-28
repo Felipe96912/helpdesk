@@ -39,11 +39,17 @@ if (loginForm) {
   });
 }
 
-/* ➕ CRIAR NOVO CHAMADO (Adicionado para funcionar o abrir-chamado.html) */
+/* ➕ CRIAR NOVO CHAMADO */
 async function abrirChamado() {
-  const titulo = document.getElementById("titulo").value;
-  const descricao = document.getElementById("descricao").value;
+  const inputTitulo = document.getElementById("titulo");
+  const inputDesc = document.getElementById("descricao");
   const token = localStorage.getItem("token");
+
+  // Verifica se os elementos existem na página atual
+  if (!inputTitulo || !inputDesc) return;
+
+  const titulo = inputTitulo.value;
+  const descricao = inputDesc.value;
 
   if (!titulo || !descricao) return alert("Preencha todos os campos!");
 
@@ -64,7 +70,7 @@ async function abrirChamado() {
       alert("Erro ao abrir chamado.");
     }
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao abrir chamado:", err);
   }
 }
 
@@ -164,8 +170,10 @@ function verDetalhes(id, titulo, descricao, status, abertura, finalizacao, soluc
     if (el.contFin) el.contFin.style.display = "none";
   } else {
     if (el.areaSol) el.areaSol.style.display = "none"; 
-    document.getElementById("modalDataFinalizacao").innerText = finalizacao;
-    document.getElementById("modalSolucaoExibicao").innerText = solucao || "Sem descrição.";
+    const elDataFin = document.getElementById("modalDataFinalizacao");
+    const elSolExib = document.getElementById("modalSolucaoExibicao");
+    if (elDataFin) elDataFin.innerText = finalizacao;
+    if (elSolExib) elSolExib.innerText = solucao || "Sem descrição.";
     if (el.contFin) el.contFin.style.display = "block";
   }
 
@@ -173,25 +181,39 @@ function verDetalhes(id, titulo, descricao, status, abertura, finalizacao, soluc
   if (modal) modal.style.display = "flex";
 }
 
+/* 🟢 FINALIZAR CHAMADO */
 async function finalizarChamadoAtual() {
   const inputSol = document.getElementById("inputSolucao");
-  if (!inputSol.value) return alert("Descreva a solução.");
+  
+  if (!inputSol) return;
+  if (!inputSol.value) return alert("Por favor, descreva a solução.");
+  if (!chamadoAbertoId) return alert("Erro: ID do chamado não encontrado.");
 
-  const res = await fetch(`${API}/chamados/${chamadoAbertoId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + localStorage.getItem("token")
-    },
-    body: JSON.stringify({ solucao: inputSol.value }) 
-  });
+  try {
+    const res = await fetch(`${API}/chamados/${chamadoAbertoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ solucao: inputSol.value }) 
+    });
 
-  if (res.ok) {
-    fecharModal();
-    carregarChamados();
+    if (res.ok) {
+      alert("Chamado finalizado!");
+      fecharModal();
+      carregarChamados();
+      inputSol.value = ""; 
+    } else {
+      const errorData = await res.json();
+      alert("Erro ao finalizar: " + (errorData.erro || "Erro desconhecido"));
+    }
+  } catch (err) {
+    console.error("Erro na requisição de finalização:", err);
   }
 }
 
+/* ❌ UTILITÁRIOS GERAIS */
 function fecharModal() {
   const m = document.getElementById("modalDetalhes");
   if (m) m.style.display = "none";
@@ -211,9 +233,8 @@ function logout() {
 window.onload = () => {
   const token = localStorage.getItem("token");
   const tipo = localStorage.getItem("tipo");
-  const path = window.location.pathname;
 
-  // Se não tem token e não está na tela de login, volta pro login
+  // Proteção: Se não tem token e não está no login, volta pro index
   if (!token && !document.getElementById("loginForm")) {
       window.location.href = "index.html";
       return;
