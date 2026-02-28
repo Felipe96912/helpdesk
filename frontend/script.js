@@ -1,4 +1,4 @@
-const API = "https://logistica-helpdesk.onrender.com";
+const API = "";
 let chamadoAbertoId = null; 
 let abaAtual = 'Aberto'; 
 let todosOsChamados = []; 
@@ -12,7 +12,7 @@ if (loginForm) {
     const inputSenha = document.getElementById("senha");
 
     if (inputEmail && inputSenha) {
-      const res = await fetch("https://logistica-helpdesk.onrender.com", {
+      const res = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: inputEmail.value, senha: inputSenha.value }),
@@ -59,7 +59,7 @@ if (formUser) {
             tipo: document.getElementById("regTipo").value
         };
 
-        const res = await fetch("https://logistica-helpdesk.onrender.com", {
+        const res = await fetch(`${API}/auth/admin/register`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
@@ -86,7 +86,7 @@ async function carregarChamados() {
   if (!lista || !token) return; 
 
   try {
-    const res = await fetch(API, {
+    const res = await fetch(`${API}/chamados`, {
       headers: { Authorization: "Bearer " + token },
     });
     if (!res.ok) throw new Error("Falha ao buscar");
@@ -152,7 +152,7 @@ async function finalizarChamadoAtual() {
   const inputSol = document.getElementById("inputSolucao");
   if (!inputSol || !inputSol.value) return alert("Por favor, descreva a solução.");
 
-  const res = await fetch(`${API}/${chamadoAbertoId}`, {
+  const res = await fetch(`${API}/chamados/${chamadoAbertoId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
