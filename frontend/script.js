@@ -12,30 +12,28 @@ if (loginForm) {
     e.preventDefault();
     const inputEmail = document.getElementById("email");
     const inputSenha = document.getElementById("senha");
-    
+
     if (inputEmail && inputSenha) {
       try {
         const res = await fetch(`${API}/auth/login`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },            
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             email: inputEmail.value.trim(), 
             senha: inputSenha.value 
-          }) // Fechar o stringify e o objeto de opções corretamente
+          })
         });
+
         const data = await res.json();
         if (res.ok) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("tipo", data.tipo);
-          // 2. Use reload ou redirecionamento dependendo da sua estrutura
           window.location.href = "index.html"; 
         } else {
-          // 3. Exibe a mensagem de erro que vem do seu backend (ex: "USUÁRIO NÃO ENCONTRADO")
           alert(data.erro || "Erro ao logar");
         }
       } catch (err) {
         console.error("Erro na requisição:", err);
-        alert("Não foi possível conectar ao servidor. Verifique sua conexão.");
       }
     }
   });
