@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const path = require('path'); // 1. Mantenha esta linha aqui no topo
+const path = require('path');
 
 const authRoutes = require("./routes/auth");
 const chamadosRoutes = require("./routes/chamados");
@@ -10,28 +10,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* 🚀 Rotas da API */
 app.use("/auth", authRoutes);
 app.use("/chamados", chamadosRoutes);
 
-// --- 2. DELETEI A LINHA REPETIDA "const path = require('path')" QUE ESTAVA AQUI ---
-
-/// 📂 CONFIGURAÇÃO DO FRONTEND
-// Se o server.js está em /backend e o index.html em /frontend
-// __dirname é a pasta 'backend'. O '..' sai dela e entra na 'frontend'.
 const caminhoFrontend = path.join(__dirname, '..', 'frontend');
-
-// Serve os arquivos estáticos (CSS, JS, Imagens)
 app.use(express.static(caminhoFrontend));
 
-// Rota principal: Serve o index.html
-// Rota principal
+// Rota específica para a home
 app.get('/', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
-// Catch-all corrigido para Express 5
-app.get('/:splat*', (req, res) => {
+// Catch-all com REGEX para Express 5 (Solução Definitiva)
+app.get(/^\/(.*)/, (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
