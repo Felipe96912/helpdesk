@@ -11,14 +11,17 @@ app.use("/chamados", require("./routes/chamados"));
 app.use("/auth", require("./routes/auth"));
 
 const path = require('path');
-/*
-// 'frontend' é o nome da sua pasta onde está o index.html
-app.use(express.static(path.join(__dirname, '../frontend'))); 
+/// 📂 CONFIGURAÇÃO DO FRONTEND
+// __dirname é a pasta 'backend'. O '../frontend' sai da backend e entra na frontend.
+const caminhoFrontend = path.join(__dirname, '..', 'frontend');
 
-// Rota para servir o index.html na raiz do site
+// Serve os arquivos estáticos (CSS, JS, Imagens)
+app.use(express.static(caminhoFrontend));
+
+// Rota principal: qualquer URL que não seja API vai carregar o index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
-});*/
+  res.sendFile(path.join(caminhoFrontend, 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
