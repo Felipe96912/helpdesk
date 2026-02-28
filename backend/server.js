@@ -7,8 +7,8 @@ app.use(cors());
 app.use(express.json());
 
 /*rotas*/
-app.use("/chamados", require("./routes/chamados"));
-app.use("/auth", require("./routes/auth"));
+app.use("/auth", authRoutes);
+app.use("/chamados", chamadosRoutes);
 
 const path = require('path');
 
