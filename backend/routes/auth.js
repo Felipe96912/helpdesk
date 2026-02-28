@@ -24,13 +24,15 @@ function auth(req, res, next) {
 // 🔑 Rota de Login (Convertida para Postgres)
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
-
+  console.log("Tentativa de login para:", email); // <--- ADICIONE ISSO
+  
   try {
     // No Postgres, usamos db.query e o resultado vem em .rows
     const result = await db.query("SELECT * FROM usuarios WHERE email = $1", [email]);
     const user = result.rows[0];
 
     if (!user || !(await bcrypt.compare(senha, user.senha))) {
+      console.log("USUÁRIO NÃO ENCONTRADO NO BANCO"); // <--- ADICIONE ISSO
       return res.status(401).json({ erro: "Credenciais inválidas" });
     }
 
