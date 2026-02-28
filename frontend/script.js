@@ -1,4 +1,3 @@
-// 1. Defina a URL do seu servidor no Render
 const API = "https://logistica-helpdesk.onrender.com";
 
 let chamadoAbertoId = null; 
@@ -34,12 +33,42 @@ if (loginForm) {
         }
       } catch (err) {
         console.error("Erro na requisição:", err);
+        alert("Servidor offline ou erro de rede.");
       }
     }
   });
 }
 
-/* 👤 FUNÇÕES PARA O MODAL DE USUÁRIO (ADMIN) */
+/* ➕ CRIAR NOVO CHAMADO (Adicionado para funcionar o abrir-chamado.html) */
+async function abrirChamado() {
+  const titulo = document.getElementById("titulo").value;
+  const descricao = document.getElementById("descricao").value;
+  const token = localStorage.getItem("token");
+
+  if (!titulo || !descricao) return alert("Preencha todos os campos!");
+
+  try {
+    const res = await fetch(`${API}/chamados`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ titulo, descricao })
+    });
+
+    if (res.ok) {
+      alert("Chamado aberto com sucesso!");
+      window.location.href = "index.html";
+    } else {
+      alert("Erro ao abrir chamado.");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/* 👤 GERENCIAR USUÁRIOS (ADMIN) */
 function abrirModalUsuario() {
     const modal = document.getElementById("modalUsuario");
     if (modal) modal.style.display = "flex";
@@ -54,25 +83,22 @@ const formUser = document.getElementById("formNovoUsuario");
 if (formUser) {
     formUser.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
-        const dados = {
-            nome: document.getElementById("regNome").value,
-            email: document.getElementById("regEmail").value,
-            senha: document.getElementById("regSenha").value,
-            tipo: document.getElementById("regTipo").value
-        };
-
         const res = await fetch(`${API}/auth/admin/register`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("token")
             },
-            body: JSON.stringify(dados)
+            body: JSON.stringify({
+                nome: document.getElementById("regNome").value,
+                email: document.getElementById("regEmail").value,
+                senha: document.getElementById("regSenha").value,
+                tipo: document.getElementById("regTipo").value
+            })
         });
 
         if (res.ok) {
-            alert("Usuário criado com sucesso!");
+            alert("Usuário criado!");
             formUser.reset();
             fecharModalUsuario();
         } else {
@@ -82,17 +108,17 @@ if (formUser) {
     });
 }
 
-/* 📋 CARREGAR CHAMADOS */
+/* 📋 LISTAGEM */
 async function carregarChamados() {
-  const lista = document.getElementById("lista");
   const token = localStorage.getItem("token");
-  if (!lista || !token) return; 
+  if (!token) return; 
 
   try {
     const res = await fetch(`${API}/chamados`, {
       headers: { Authorization: "Bearer " + token },
     });
-    if (!res.ok) throw new Error("Falha ao buscar");
+    if (res.status === 401 || res.status === 403) return logout(); // Token expirado
+    
     todosOsChamados = await res.json();
     renderizarLista();
   } catch (err) {
@@ -100,7 +126,6 @@ async function carregarChamados() {
   }
 }
 
-/* 🎨 RENDERIZAR LISTA */
 function renderizarLista() {
   const lista = document.getElementById("lista");
   if (!lista) return;
@@ -112,12 +137,12 @@ function renderizarLista() {
       <div>
         <strong>${c.titulo}</strong> - <span style="color: ${c.status === 'Aberto' ? '#2f80ed' : '#4cd137'}">${c.status}</span>
       </div>
-      <small style="color: #888;">${c.status === 'Aberto' ? '📅 Aberto em: ' + (c.data_abertura || 'N/A') : '✅ Finalizado em: ' + (c.data_finalizacao || 'N/A')}</small>
+      <small style="color: #888;">${c.status === 'Aberto' ? '📅 Aberto: ' + (c.data_abertura || 'N/A') : '✅ Finalizado: ' + (c.data_finalizacao || 'N/A')}</small>
     </li>
   `).join("");
 }
 
-/* 🔍 DETALHES NO MODAL */
+/* 🔍 MODAL DETALHES */
 function verDetalhes(id, titulo, descricao, status, abertura, finalizacao, solucao) {
   chamadoAbertoId = id;
   const tipoUsuario = localStorage.getItem("tipo"); 
@@ -139,10 +164,8 @@ function verDetalhes(id, titulo, descricao, status, abertura, finalizacao, soluc
     if (el.contFin) el.contFin.style.display = "none";
   } else {
     if (el.areaSol) el.areaSol.style.display = "none"; 
-    const elFin = document.getElementById("modalDataFinalizacao");
-    const elSolExib = document.getElementById("modalSolucaoExibicao");
-    if (elFin) elFin.innerText = finalizacao;
-    if (elSolExib) elSolExib.innerText = solucao || "Sem descrição.";
+    document.getElementById("modalDataFinalizacao").innerText = finalizacao;
+    document.getElementById("modalSolucaoExibicao").innerText = solucao || "Sem descrição.";
     if (el.contFin) el.contFin.style.display = "block";
   }
 
@@ -150,10 +173,9 @@ function verDetalhes(id, titulo, descricao, status, abertura, finalizacao, soluc
   if (modal) modal.style.display = "flex";
 }
 
-/* 🟢 FINALIZAR CHAMADO */
 async function finalizarChamadoAtual() {
   const inputSol = document.getElementById("inputSolucao");
-  if (!inputSol || !inputSol.value) return alert("Por favor, descreva a solução.");
+  if (!inputSol.value) return alert("Descreva a solução.");
 
   const res = await fetch(`${API}/chamados/${chamadoAbertoId}`, {
     method: "PUT",
@@ -165,13 +187,11 @@ async function finalizarChamadoAtual() {
   });
 
   if (res.ok) {
-    alert("Chamado finalizado!");
     fecharModal();
     carregarChamados();
   }
 }
 
-/* ❌ UTILITÁRIOS GERAIS */
 function fecharModal() {
   const m = document.getElementById("modalDetalhes");
   if (m) m.style.display = "none";
@@ -184,13 +204,20 @@ function mudarAba(s) {
 
 function logout() {
   localStorage.clear();
-  window.location.href = "index.html"; // Garante que volta para a tela inicial/login
+  window.location.href = "index.html"; 
 }
 
 /* ⭐ INICIALIZAÇÃO */
 window.onload = () => {
   const token = localStorage.getItem("token");
   const tipo = localStorage.getItem("tipo");
+  const path = window.location.pathname;
+
+  // Se não tem token e não está na tela de login, volta pro login
+  if (!token && !document.getElementById("loginForm")) {
+      window.location.href = "index.html";
+      return;
+  }
 
   if (token) {
     const loginContainer = document.getElementById("loginContainer");
@@ -204,6 +231,6 @@ window.onload = () => {
       btnAdmin.style.display = "inline-block";
     }
     
-    carregarChamados();
+    if (document.getElementById("lista")) carregarChamados();
   }
 };
