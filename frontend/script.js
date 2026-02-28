@@ -12,15 +12,13 @@ if (loginForm) {
     e.preventDefault();
     const inputEmail = document.getElementById("email");
     const inputSenha = document.getElementById("senha");
-
+    
     if (inputEmail && inputSenha) {
       try {
         const res = await fetch(`${API}/auth/login`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            email: inputEmail.value.trim(), // Remove espaços extras
-            senha: inputSenha.value 
+          headers: { "Content-Type": "application/json" },            
+          body: JSON.stringify({ email: inputEmail.value.trim(), senha: inputSenha.value })
           }),
         });
 
