@@ -25,13 +25,13 @@ const caminhoFrontend = path.join(__dirname, '..', 'frontend');
 app.use(express.static(caminhoFrontend));
 
 // Rota principal: Serve o index.html
+// Rota principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
-// Catch-all: qualquer outra rota (como /login) volta para o index
-// Isso é vital para que o sistema não dê "Cannot GET /rota" ao atualizar a página
-app.get('/*', (req, res) => {
+// Catch-all corrigido para Express 5
+app.get('/:splat*', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
