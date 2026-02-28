@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/chamados";
+const API = "https://logistica-helpdesk.onrender.com";
 let chamadoAbertoId = null; 
 let abaAtual = 'Aberto'; 
 let todosOsChamados = []; 
