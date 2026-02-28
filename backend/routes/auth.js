@@ -28,7 +28,11 @@ router.post("/login", async (req, res) => {
   
   try {
     // No Postgres, usamos db.query e o resultado vem em .rows
-    const result = await db.query("SELECT * FROM usuarios WHERE email = $1", [email]);
+    // O TRIM remove espaços e o LOWER ignora Maiúsculas/Minúsculas
+const result = await db.query(
+  "SELECT * FROM usuarios WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))", 
+  [email]
+);
     const user = result.rows[0];
 
     if (!user || !(await bcrypt.compare(senha, user.senha))) {
