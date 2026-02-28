@@ -10,7 +10,9 @@ if (!connectionString) {
 const pool = new Pool({
   connectionString,
   ssl: {
-    // Obrigatório para conectar ao Neon a partir do Render
+    // Define explicitamente o modo para evitar o warning
+    sslmode: 'require', 
+    // Mantém false se você não tiver o certificado CA localmente (comum no Render/Neon)
     rejectUnauthorized: false 
   }
 });
