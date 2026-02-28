@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const path = require('path'); // Mantenha esta linha aqui (Linha 3 ou 4)
 
-const authRoutes = require("./routes/auth"); // Verifique se o caminho da pasta está correto
+const authRoutes = require("./routes/auth");
 const chamadosRoutes = require("./routes/chamados");
 
 const app = express();
@@ -9,9 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/*rotas*/
+/* rotas API */
 app.use("/auth", authRoutes);
-app.use("/chamados", chamadosRoutes);
+app.use("/chamados", chamadosRoutes);;
 
 const path = require('path');
 
