@@ -20,7 +20,7 @@ const caminhoFrontend = path.join(__dirname, '..', 'frontend');
 app.use(express.static(caminhoFrontend));
 
 // Rota principal: qualquer URL que não seja API vai carregar o index.html
-app.get('/*', (req, res) => {
+app.get('/:splat*', (req, res) => {
   res.sendFile(path.join(caminhoFrontend, 'index.html'));
 });
 
