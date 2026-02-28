@@ -1,4 +1,6 @@
-const API = "";
+// 1. Defina a URL do seu servidor no Render
+const API = "https://logistica-helpdesk.onrender.com";
+
 let chamadoAbertoId = null; 
 let abaAtual = 'Aberto'; 
 let todosOsChamados = []; 
@@ -12,20 +14,29 @@ if (loginForm) {
     const inputSenha = document.getElementById("senha");
 
     if (inputEmail && inputSenha) {
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: inputEmail.value, senha: inputSenha.value }),
-        
-      });
+      try {
+        const res = await fetch(`${API}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            email: inputEmail.value.trim(), // Remove espaços extras
+            senha: inputSenha.value 
+          }),
+        });
 
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("tipo", data.tipo);
-        window.location.href = "index.html"; 
-      } else {
-        alert(data.erro || "Erro ao logar");
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("tipo", data.tipo);
+          // 2. Use reload ou redirecionamento dependendo da sua estrutura
+          window.location.href = "index.html"; 
+        } else {
+          // 3. Exibe a mensagem de erro que vem do seu backend (ex: "USUÁRIO NÃO ENCONTRADO")
+          alert(data.erro || "Erro ao logar");
+        }
+      } catch (err) {
+        console.error("Erro na requisição:", err);
+        alert("Não foi possível conectar ao servidor. Verifique sua conexão.");
       }
     }
   });
@@ -33,13 +44,8 @@ if (loginForm) {
 
 /* 👤 FUNÇÕES PARA O MODAL DE USUÁRIO (ADMIN) */
 function abrirModalUsuario() {
-    console.log("Tentando abrir modal de usuário..."); 
     const modal = document.getElementById("modalUsuario");
-    if (modal) {
-        modal.style.display = "flex";
-    } else {
-        console.error("Erro: Elemento modalUsuario não encontrado no HTML");
-    }
+    if (modal) modal.style.display = "flex";
 }
 
 function fecharModalUsuario() {
@@ -47,7 +53,6 @@ function fecharModalUsuario() {
     if (modal) modal.style.display = "none";
 }
 
-// Lógica para enviar o formulário de cadastro de novo usuário
 const formUser = document.getElementById("formNovoUsuario");
 if (formUser) {
     formUser.addEventListener("submit", async (e) => {
@@ -182,7 +187,7 @@ function mudarAba(s) {
 
 function logout() {
   localStorage.clear();
-  location.reload();
+  window.location.href = "index.html"; // Garante que volta para a tela inicial/login
 }
 
 /* ⭐ INICIALIZAÇÃO */
@@ -198,7 +203,6 @@ window.onload = () => {
     if (loginContainer) loginContainer.style.display = "none";
     if (sistema) sistema.style.display = "block";
     
-    // MOSTRA O BOTÃO SE FOR ADMIN
     if (tipo === 'admin' && btnAdmin) {
       btnAdmin.style.display = "inline-block";
     }
